@@ -1,0 +1,24 @@
+import tp2_reseau_identifiants
+
+
+print('--- Chargement du réseau (identifiants) ---')
+reseau = tp2_reseau_identifiants.ouvrir_et_lire_fichier_reseau()
+nb_usagers= len(reseau)
+
+matrice = (tp2_reseau_identifiants.calculer_scores_similarite(reseau))
+
+autreRecommandation = True
+fin_du_programme = False
+while True:
+
+        id_usager =input("Entrer l'ID de l'usager pour lequel vous voulez une rec (entre 0 et {}):".format(nb_usagers))
+        if not id_usager.isdigit():
+            continue
+        id_usager = int(id_usager)
+        if 0 <= id_usager < nb_usagers:
+            matrice_similarite = tp2_reseau_identifiants.calculer_scores_similarite(reseau)
+            print("Pour la personne", id_usager, ", nous recommandons l'ami",
+                  tp2_reseau_identifiants.recommander(id_usager, reseau, matrice_similarite))
+            continue
+        else:
+            print("Erreur: l'usager doit être un nombre entier entre ", 0, "et", nb_usagers - 1, "inclusivement.\n")
