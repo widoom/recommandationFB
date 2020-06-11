@@ -1,0 +1,30 @@
+def initialiser_matrice_carre(n):
+    """
+    Crée une matrice de taille nxn, initialisée avec des zéros et retourne la matrice.
+    Args:
+        n (int): dimension de la matrice nxn
+    Returns:
+        matrice (list): matrice initialisée
+
+    """
+    matrice = []
+    for ligne in range(n):  # pour chacune des lignes dans n
+        matrice.append([])  # créer une ligne (liste) et l'initialiser à 0
+        for colonne in range(n):
+            matrice[ligne].append(0)  # ajouter un 0 pour chaque n colonne
+    return matrice
+
+
+# Tests unitaires (les docstrings ne sont pas exigés pour les fonntions de tests unitaires)
+
+def test_initialiser_matrice_carre():
+    assert initialiser_matrice_carre(1) == [[0]]
+    assert initialiser_matrice_carre(2) == [[0,0], [0,0]]
+    assert initialiser_matrice_carre(10)[9] == [0,0,0,0,0,0,0,0,0,0]
+    assert len(initialiser_matrice_carre(100)) == 100
+    assert len(initialiser_matrice_carre(42)[20]) == 42
+
+
+if __name__ == "__main__":
+    test_initialiser_matrice_carre()
+    print('Test unitaires passés avec succès!')
