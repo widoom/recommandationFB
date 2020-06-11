@@ -1,0 +1,108 @@
+def ouvrir_et_lire_fichier_reseau():
+    """
+    Demande à l'utilisateur un nom de fichier contenant un réseau d'amis et charge le réseau en mémoire.
+    PRÉCONDITION: On considère que le fichier du réseau respecte le format écrit dans l'énoncé du TP
+
+    Returns:
+        reseau (list): le réseau extrait du fichier (une liste de listes d'index d'usgers).
+
+    """
+
+    descripteur_fichier = tp2_utils.ouvrir_fichier()
+
+    # La première ligne du fichier contient le nombre total d'usagers
+    nb_usagers = int(descripteur_fichier.readline())
+    print("Le réseau contient {} usagers".format(nb_usagers))
+
+    # Création d'un réseau vide (c-a-d une liste de listes vides)
+    reseau = []
+    for i in range (nb_usagers):
+        reseau.append([])
+
+    # Chaque ligne du fichier (sauf la première) contient un coupe "d'amis"
+    for ligne in descripteur_fichier.readlines():
+        couple_usagers = ligne.split(' ')
+        id_usager_1 = int(couple_usagers[0])
+        id_usager_2 = int(couple_usagers[1])
+        reseau[id_usager_1].append(id_usager_2)
+        reseau[id_usager_2].append(id_usager_1)
+
+    # Fermeture du fichier
+    descripteur_fichier.close()
+    print("Lecture du fichier terminé.")
+
+    return reseau
+
+
+def trouver_nombre_elements_communs_entre_listes(liste1, liste2):
+    """ Ne pas oublier la docstring"""
+    compteur_amis_commun = 0
+    for element in liste1:
+        if element in liste2:
+            compteur_amis_commun = compteur_amis_commun + 1
+    return compteur_amis_commun
+
+
+
+def calculer_scores_similarite(reseau):
+    """ Ne pas oublier la docstring"""
+    n = len(reseau)
+    matrice_similarite = tp2_utils.initialiser_matrice_carre(n)
+    liste1 = []
+    liste2 = []
+    compteur_liste1 = 0
+    compteur_liste2 = 0
+
+    for element_liste1 in reseau:
+        liste1 = element_liste1
+        compteur_amis_commun = trouver_nombre_elements_communs_entre_listes(liste1, liste2)
+        matrice_similarite[compteur_liste1] = compteur_amis_commun
+        compteur_liste1 = compteur_liste1 + 1
+
+    for element_liste2 in reseau:
+        liste2 = element_liste2
+        compteur_amis_commun = trouver_nombre_elements_communs_entre_listes(liste1, liste2)
+        matrice_similarite[compteur_liste2] = compteur_amis_commun
+        compteur_liste2 = compteur_liste2 + 1
+
+    return matrice_similarite
+
+
+
+def recommander(id_usager, reseau, matrice_similarite):
+    """ Ne pas oublier la docstring"""
+    usager_matrice = matrice_similarite.index(id_usager)
+    ami_recommande = matrice_similarite.index(max(usager_matrice))
+    max_value = max(matrice_similarite.index(usager_matrice))
+
+    if ami_recommande == id_usager:
+        max_value = max_value - 1
+
+    ami_recommande = matrice_similarite.index[usager_matrice]
+
+    while True:
+        if ami_recommande == reseau.index(ami_recommande):
+            ami_recommande = reseau.index(max_value, ami_recommande + 1)
+            return True
+
+        return ami_recommande
+
+
+# Tests unitaires (les docstrings ne sont pas exigés pour les fonntions de tests unitaires)
+
+def test_trouver_nombre_elements_communs_entre_listes():
+    assert trouver_nombre_elements_communs_entre_listes([3, 4], [3, 4]) == 2
+    assert trouver_nombre_elements_communs_entre_listes([1, 2, 4, 5, 6], [5, 6, 1]) == 3
+    assert trouver_nombre_elements_communs_entre_listes([3, 4, 2], [3, 4, 6, 7]) == 2
+    assert trouver_nombre_elements_communs_entre_listes([6, 9], [1, 4]) == 0
+    assert trouver_nombre_elements_communs_entre_listes([1], [1, 2, 4, 5]) == 1
+
+def test_scores_similarite():
+    assert matrice_similarite == calculer_scores_similarite([1,2,3])
+
+
+
+if __name__ == "__main__":
+    test_trouver_nombre_elements_communs_entre_listes()
+    test_scores_similarite()
+    print('Test unitaires passés avec succès!')
